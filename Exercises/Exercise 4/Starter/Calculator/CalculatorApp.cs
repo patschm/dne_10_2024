@@ -2,10 +2,10 @@ namespace Calculator;
 
 public partial class CalculatorApp : Form
 {
-    private SynchronizationContext? _main;
+    private readonly SynchronizationContext? _ctx;
     public CalculatorApp()
     {
-        _main = SynchronizationContext.Current;
+        _ctx = SynchronizationContext.Current;
         InitializeComponent();
     }
 
@@ -14,19 +14,28 @@ public partial class CalculatorApp : Form
         if (int.TryParse(txtA.Text, out int a) && int.TryParse(txtB.Text, out int b)) 
         {
             //var result = LongAdd(a, b);
-            //UpdateAnswer(result
+            //UpdateAnswer(result);
+
             //Task.Run(() => LongAdd(a, b))
-            //   .ContinueWith(pt=>_main?.Send(UpdateAnswer, pt.Result));
-            //var result=await LongAddAsync(a, b);
-            var result = DoeIets(a, b).Result; // Dead lock!
+            //    .ContinueWith(pt => { 
+            //        _ctx?.Send(UpdateAnswer, pt.Result);
+            //    });
+
+            //LongAddAsync(a, b)
+            //    .ContinueWith(pt => _ctx?.Send(UpdateAnswer, pt.Result)); 
+
+            int result = await LongAddAsync(a, b);
             UpdateAnswer(result);
+
+            // Dead lock
+            //int result = DoeIets(a, b).Result;
+            //UpdateAnswer(result);
         }
     }
 
-    private async Task<int> DoeIets(int a, int b)
+    async Task<int> DoeIets(int a, int b)
     {
-        var res = await LongAddAsync(a,b).ConfigureAwait(false);
-        return res;
+        return await LongAddAsync(a, b);
     }
 
     private void UpdateAnswer(object? result)
@@ -40,7 +49,7 @@ public partial class CalculatorApp : Form
         return a + b;
     }
     private Task<int> LongAddAsync(int a, int b)
-    {
-        return Task.Run(() => LongAdd(a, b));
+    {       
+        return Task.Run(()=>LongAdd(a,b));
     }
 }

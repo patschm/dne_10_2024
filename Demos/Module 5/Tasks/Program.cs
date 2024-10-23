@@ -14,7 +14,7 @@ internal class Program
         //await AsynchronousAwaitAsync();
         //Locking();
         //Locking();
-        //Semaphoring();
+       // Semaphoring();
         //Blocking();
         //CountDown();
         GreatBarrier();
@@ -125,8 +125,9 @@ internal class Program
     private static void Semaphoring()
     {
         var rnd = new Random();
-        var garage = new SemaphoreSlim(5, 5);
-        
+        var garage = new SemaphoreSlim(10, 10);
+
+        ThreadPool.SetMinThreads(20, 0);
         Parallel.For(0, 20, x => Car(x));
         
         void Car(int id)

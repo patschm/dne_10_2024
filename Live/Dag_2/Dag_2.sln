@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34723.18
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Threadings", "Threadings\Threadings.csproj", "{CC0405F9-C250-430A-80A8-982945ECF192}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StateMachine", "StateMachine\StateMachine.csproj", "{04EA2BB5-C9C2-4E76-9716-684F45B4A184}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CC0405F9-C250-430A-80A8-982945ECF192}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CC0405F9-C250-430A-80A8-982945ECF192}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CC0405F9-C250-430A-80A8-982945ECF192}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CC0405F9-C250-430A-80A8-982945ECF192}.Release|Any CPU.Build.0 = Release|Any CPU
+		{04EA2BB5-C9C2-4E76-9716-684F45B4A184}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{04EA2BB5-C9C2-4E76-9716-684F45B4A184}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{04EA2BB5-C9C2-4E76-9716-684F45B4A184}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{04EA2BB5-C9C2-4E76-9716-684F45B4A184}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {EDB1E131-2EDA-487C-9538-040C22887EDD}
+	EndGlobalSection
+EndGlobal

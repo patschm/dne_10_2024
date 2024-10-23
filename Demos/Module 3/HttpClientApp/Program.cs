@@ -16,39 +16,40 @@ public class Program
 {
     static void Main(string[] args)
     {
-        BasicClient();
+        //BasicClientAsync();
         //DIClient();
         //StrongClient();
-        //PostClient();
+        PostClient();
         //AuthClient
         Console.ReadLine();
     }
 
-   static HttpClient client = new HttpClient();
-    private static void BasicClient()
+    static HttpClient client = new HttpClient();
+    private static async Task BasicClientAsync()
     {
-        var handler = new SocketsHttpHandler();
-        handler.MaxConnectionsPerServer = 1;
-        handler.PooledConnectionLifetime = TimeSpan.FromMinutes(15);
-        client = new HttpClient(handler);
-        //HttpClient client = new HttpClient();
-        client.BaseAddress = new Uri("https://localhost:8001/");
+        //var handler = new SocketsHttpHandler();
+        //handler.MaxConnectionsPerServer = 1;
+        //handler.PooledConnectionLifetime = TimeSpan.FromMinutes(15);
+        //client = new HttpClient(handler);
 
+        client.BaseAddress = new Uri("https://localhost:8001/");
         for (int i = 0; i < 100; i++)
         {
-            client.GetAsync("WeatherForecast").ContinueWith(pt =>
+            //HttpClient client = new HttpClient();
+            //client.BaseAddress = new Uri("https://localhost:8001/");
+            var response = await client.GetAsync("WeatherForecast");
+            if (response.IsSuccessStatusCode)
             {
-                if (pt.Result.IsSuccessStatusCode)
-                {
-                    Console.WriteLine(pt.Result.Content.Headers.ContentType);
-                    //var strData = pt.Result.Content.ReadAsStringAsync().Result;
-                    Console.Write(i + ", ");
-                    //Console.WriteLine(strData);
-                }
-            });
-            //client.Dispose();
+                Console.WriteLine(response.Content.Headers.ContentType);
+                var data = await response.Content.ReadAsStringAsync();
+                Console.Write(data);
+                //var strData = pt.Result.Content.ReadAsStringAsync().Result;
+                //Console.Write(i + ", ");
+                //Console.WriteLine(strData);
+            }
         }
     }
+
     private static void DIClient()
     {
         var factory = new DefaultServiceProviderFactory();
@@ -58,16 +59,16 @@ public class Program
         {
             opts.BaseAddress = new Uri("https://localhost:8001/");
         })
-           .SetHandlerLifetime(TimeSpan.FromMinutes(5)) // Default is 4 minutes
-            .AddPolicyHandler(msg =>
-            {
-                // Retry mechanisms
-                // From Microsoft.Extensions.Http.Polly
-                return HttpPolicyExtensions
-                    .HandleTransientHttpError()
-                    .OrResult(m => m.StatusCode == HttpStatusCode.NotFound)
-                    .WaitAndRetryAsync(3, retAttempt => TimeSpan.FromSeconds(5));
-            });
+           .SetHandlerLifetime(TimeSpan.FromMinutes(5)); // Default is 4 minutes
+            //.AddPolicyHandler(msg =>
+            //{
+            //    // Retry mechanisms
+            //    // From Microsoft.Extensions.Http.Polly
+            //    return HttpPolicyExtensions
+            //        .HandleTransientHttpError()
+            //        .OrResult(m => m.StatusCode == HttpStatusCode.NotFound)
+            //        .WaitAndRetryAsync(3, retAttempt => TimeSpan.FromSeconds(5));
+            //});
 
         var provider = builder.BuildServiceProvider();
 
@@ -89,7 +90,10 @@ public class Program
         {
             opts.BaseAddress = new Uri("https://localhost:8001/");
         });
+        //builder.AddTransient<WeatherForecastService>();
+
         var provider = builder.BuildServiceProvider();
+
         var service = provider.GetService<WeatherForecastService>();
         var result = service?.GetWeather();
         if (result != null)
@@ -116,6 +120,8 @@ public class Program
         var content = new StringContent(JsonConvert.SerializeObject(item));
         content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
         var response = client.PostAsync("WeatherForecast", content).Result;
+        
+        
         if (response.IsSuccessStatusCode)
         {
             Console.WriteLine(response.Headers.Location);
