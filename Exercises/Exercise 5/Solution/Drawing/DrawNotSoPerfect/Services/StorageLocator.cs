@@ -45,6 +45,7 @@ internal class StorageLocator
         // instance to the list StorageOptions.
         foreach (var file in files)
         {
+            Task.Delay(100).Wait();
             var asm = Assembly.LoadFile(file);
             if (asm != null)
             {

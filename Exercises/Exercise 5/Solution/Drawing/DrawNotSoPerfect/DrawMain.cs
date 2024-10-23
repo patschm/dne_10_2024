@@ -6,6 +6,7 @@ namespace DrawNotSoPerfect
 {
     public partial class DrawMain : Form
     {
+        private readonly SynchronizationContext? _synchronizationContext;
         public class DragInfo
         {
             public Shape? SelectedShape { get; internal set; }
@@ -18,6 +19,7 @@ namespace DrawNotSoPerfect
 
         public DrawMain()
         {
+            _synchronizationContext = SynchronizationContext.Current;
             InitializeComponent();
         }
 
@@ -197,22 +199,22 @@ namespace DrawNotSoPerfect
 
         private void StorageLocator_Changed(object? sender, EventArgs e)
         {
-            ClearFormatMenu();
-
-
+            _synchronizationContext?.Send(obj => ClearFormatMenu(), null);
             foreach (var item in _storageLocator!.StorageOptions)
             {
-                var menu = new ToolStripMenuItem();
-                menu.Text = item.Name;
-                menu.Checked = false;
-                menu.Tag = item;
-                menu.Click += Menu_Click;
-                saveFormatToolStripMenuItem.DropDownItems.Add(menu);
+                _synchronizationContext?.Send(obj=>AddToFormatMenu(item), null);              
             }
-            if (saveFormatToolStripMenuItem.DropDownItems.Count > 0)
-            {
-                saveFormatToolStripMenuItem.DropDownItems[0].PerformClick();
-            }
+        }
+
+        private void AddToFormatMenu(IStorage item)
+        {
+            var menu = new ToolStripMenuItem();
+            menu.Text = item.Name;
+            menu.Checked = false;
+            menu.Tag = item;
+            menu.Click += Menu_Click;
+            saveFormatToolStripMenuItem.DropDownItems.Add(menu);
+            saveFormatToolStripMenuItem.DropDownItems[0].PerformClick();
         }
 
         private void ClearFormatMenu()

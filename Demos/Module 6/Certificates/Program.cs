@@ -17,7 +17,7 @@ internal class Program
         {
             Console.WriteLine(cert.SubjectName.Name);
         }
-        var certificate = store.Certificates.Find(X509FindType.FindBySubjectDistinguishedName, "CN=ClientCert", false).FirstOrDefault(); ;
+        var certificate = store.Certificates.Find(X509FindType.FindBySubjectDistinguishedName, "CN=localhost", false).FirstOrDefault(); ;
         Console.WriteLine($"Found Certificate {certificate?.SubjectName.Name}");
 
         // Encrypt
